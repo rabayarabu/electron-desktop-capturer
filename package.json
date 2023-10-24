@@ -1,0 +1,21 @@
+{
+  "name": "screen-recorder",
+  "version": "1.0.0",
+  "description": "A screen recorder",
+  "main": "main.js",
+  "scripts": {
+    "test": "npm test",
+    "start": "electron ."
+  },
+  "keywords": [
+    "recorder"
+  ],
+  "author": "Rabu",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^27.0.2"
+  },
+  "dependencies": {
+    "iconify": "^1.4.0"
+  }
+}
