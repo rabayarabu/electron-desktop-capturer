@@ -1,33 +1,20 @@
-// In the preload script.
-const { ipcRenderer } = require('electron')
+const { ipcRenderer } = require('electron');
 
-ipcRenderer.on('SET_SOURCE', async (event, sourceId) => {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      audio: false,
-      video: {
-        mandatory: {
-          chromeMediaSource: 'desktop',
-          chromeMediaSourceId: sourceId,
-          minWidth: 1280,
-          maxWidth: 1280,
-          minHeight: 720,
-          maxHeight: 720
-        }
-      }
-    })
-    handleStream(stream)
-  } catch (e) {
-    handleError(e)
-  }
-})
+// Trigger the desktop stream capture
+ipcRenderer.send('get-desktop-stream', 'Entire screen');
 
-function handleStream (stream) {
-  const video = document.querySelector('video')
-  video.srcObject = stream
-  video.onloadedmetadata = (e) => video.play()
+ipcRenderer.on('desktop-stream', (event, stream) => {
+    // Do something with the stream, for example, display it in a <video> element
+    handleStream(stream);
+});
+
+function handleStream(stream) {
+    const video = document.createElement('video')
+    video.srcObject = stream
+    video.onloadedmetadata = (e) => video.play()
+    document.appendChild(video)
 }
 
-function handleError (e) {
-  console.log(e)
+function handleError(e) {
+    console.log(e)
 }
