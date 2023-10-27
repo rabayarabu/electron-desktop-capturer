@@ -1,8 +1,41 @@
-// This file is required by the index.html file and will
-// be executed in the renderer process for that window.
-// No Node.js APIs are available in this process because
-// `nodeIntegration` is turned off. Use `preload.js` to
-// selectively enable features needed in the rendering
-// process.
+function getDisplayMedia() {
+	if (main.isOSX()) {
+		screenPickerOptions.system_preferences = true;
+	}
 
-// override getDisplayMedia
+	return new Promise(async (resolve, reject) => {
+		let has_access = await main.getScreenAccess();
+		if (!has_access) {
+			return reject('none');
+		}
+
+		try {
+			const sources = await main.getScreenSources();
+			screenPickerShow(sources, async (id) => {
+				try {
+					const source = sources.find(source => source.id === id);
+					if (!source) {
+						return reject('none');
+					}
+
+					const stream = await window.navigator.mediaDevices.getUserMedia({
+						audio: false,
+						video: {
+							mandatory: {
+								chromeMediaSource: 'desktop',
+								chromeMediaSourceId: source.id
+							}
+						}
+					});
+					resolve(stream);
+				}
+				catch (err) {
+					reject(err);
+				}
+			}, {});
+		}
+		catch (err) {
+			reject(err);
+		}
+	});
+}

@@ -21,10 +21,9 @@
     "electron": "^27.0.2"
   },
   "dependencies": {
-    "electron": "^16.0.0",
-    "fs": "^0.0.1-security",
-    "fs-path": "^0.0.25",
-    "iconify": "^1.4.0",
-    "path": "^0.12.7"
+    "electron": "^25.0.0",
+    "electron-util": "^0.17.2",
+    "iconify": "^1.4.0"
+    
   }
 }
