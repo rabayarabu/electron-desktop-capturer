@@ -47,7 +47,7 @@ function stopCapture(evt) {
 	tracks.forEach((track) => track.stop());
 	video.srcObject = null;
 	startBtn.classList = '';
-	stopBtn.classList = 'hidden';
+	stopBtn.classList = '';
 }
 
 function openPreferences() {
