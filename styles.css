@@ -4,7 +4,6 @@
 \**************************/
 body {
   width: 100%;
-  height: 100vh;
   margin: 0;
   padding: 0;
 }
@@ -209,6 +208,9 @@ Demo Animation Style
 
 #stream {
   width: 100%;
+  height: 600px;
+  border: 2px solid red;
+  border-radius: 5px;
 }
 
 .hidden {
@@ -216,8 +218,7 @@ Demo Animation Style
 }
 
 .body-wrapper {
-  border: 5px solid black;
-  height: 100vh;
+  padding: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -229,11 +230,13 @@ Demo Animation Style
 
 .button-wrapper {
   margin: 0 auto;
-  padding: 25px 0;
+  padding: 15px 15px;
   width: 50%;
   display: flex;
   justify-content: center;
   gap: 10px;
+  border: 2px solid red;
+  border-radius: 5px;
 }
 
 .modal__footer {
@@ -242,29 +245,27 @@ Demo Animation Style
 /* Add styles here to customize the appearance of your app */
 #start {
   padding: 10px 20px;
-  color: black;
+  color: rgb(148, 21, 21);
   background-color: #f6f7f9;
   border-radius: 5px;
-  margin-bottom: 150px;
   font-size: 30px;
   line-height: normal;
   text-decoration: bold;
 }
 #start:hover {
-  background-color: #05090f;
+  background-color: #ed5656;
   color: #f6f7f9;
 }
 #stop {
   padding: 10px 20px;
-  color: black;
+  color: rgb(148, 21, 21);
   background-color: #f6f7f9;
   border-radius: 5px;
-  margin-bottom: 150px;
   font-size: 30px;
   line-height: normal;
   text-decoration: bold;
 }
 #stop:hover {
-  background-color: #05090f;
+  background-color: #ed5656;
   color: #f6f7f9;
 }
