@@ -1,4 +1,5 @@
 // Modules to control application life and create native browser window
+// import the modules we are going to use:
 const {app, BrowserWindow, ipcMain, systemPreferences, desktopCapturer} = require('electron');
 const util = require("electron-util");
 const path = require('path');
@@ -52,6 +53,7 @@ app.on('window-all-closed', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+// add the necessary handlers
 ipcMain.handle('electronMain:openScreenSecurity', () => util.openSystemPreferences('security', 'Privacy_ScreenCapture'));
 ipcMain.handle('electronMain:getScreenAccess', () => !IS_OSX || systemPreferences.getMediaAccessStatus('screen') === 'granted');
 ipcMain.handle('electronMain:screen:getSources', () => {

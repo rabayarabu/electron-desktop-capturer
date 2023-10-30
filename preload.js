@@ -1,23 +1,11 @@
-// const { ipcRenderer } = require('electron');
+// We have created three channels* that are responsible for sending messages to the Main process:
 
-// // Trigger the desktop stream capture
-// ipcRenderer.send('get-desktop-stream', 'Entire screen');
+// electronMain:openScreenSecurity
+// electronMain:getScreenAccess
+// electronMain:screen:getSources
 
-// ipcRenderer.on('desktop-stream', (event, stream) => {
-//     // Do something with the stream, for example, display it in a <video> element
-//     handleStream(stream);
-// });
+// *The names of the channels can be customized as per your preference.
 
-// function handleStream(stream) {
-//     const video = document.createElement('video')
-//     video.srcObject = stream
-//     video.onloadedmetadata = (e) => video.play()
-//     document.appendChild(video)
-// }
-
-// function handleError(e) {
-//     console.log(e)
-// }
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electronApi', {

@@ -5,6 +5,10 @@
  * `contextIsolation` is turned on. Use the contextBridge API in `preload.js`
  * to expose Node.js functionality from the main process.
  */
+// The main magic happens in the getDisplayMedia() function. We request
+//  the Main process for ScreenAccess permission, then we request ScreenSources 
+// and display our modal Screen Picker with the available sources.
+
 const main = window.electronApi.main;
 
 const video = document.querySelector('#stream');
