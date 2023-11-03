@@ -25,7 +25,77 @@ const displayMediaOptions = {
 };
 
 navigator.mediaDevices.getDisplayMedia = getDisplayMedia;
-
+// start recording
+if (navigator.mediaDevices) {
+	console.log("getUserMedia supported.");
+  
+	const constraints = { audio: true };
+	let chunks = [];
+  
+	navigator.mediaDevices
+	  .getUserMedia(constraints)
+	  .then((stream) => {
+		const mediaRecorder = new MediaRecorder(stream);
+  
+		startBtn.onclick = () => {
+		  mediaRecorder.start();
+		  console.log(mediaRecorder.state);
+		  console.log("recorder started");
+		  startBtn.style.background = "red";
+		  startBtn.style.color = "black";
+		};
+  
+		stop.onclick = () => {
+		  mediaRecorder.stop();
+		  console.log(mediaRecorder.state);
+		  console.log("recorder stopped");
+		  startBtn.style.background = "";
+		  startBtn.style.color = "";
+		};
+  
+		mediaRecorder.onstop = (e) => {
+		  console.log("data available after MediaRecorder.stop() called.");
+  
+		  const clipName = prompt("Enter a name for your sound clip");
+  
+		  const clipContainer = document.createElement("article");
+		  const clipLabel = document.createElement("p");
+		  const audio = document.createElement("audio");
+		  const deleteButton = document.createElement("button");
+		  const mainContainer = document.querySelector("body");
+  
+		  clipContainer.classList.add("clip");
+		  audio.setAttribute("controls", "");
+		  deleteButton.textContent = "Delete";
+		  clipLabel.textContent = clipName;
+  
+		  clipContainer.appendChild(audio);
+		  clipContainer.appendChild(clipLabel);
+		  clipContainer.appendChild(deleteButton);
+		  mainContainer.appendChild(clipContainer);
+  
+		  audio.controls = true;
+		  const blob = new Blob(chunks, { type: "audio/ogg; codecs=opus" });
+		  chunks = [];
+		  const audioURL = URL.createObjectURL(blob);
+		  audio.src = audioURL;
+		  console.log("recorder stopped");
+  
+		  deleteButton.onclick = (e) => {
+			const evtTgt = e.target;
+			evtTgt.parentNode.parentNode.removeChild(evtTgt.parentNode);
+		  };
+		};
+  
+		mediaRecorder.ondataavailable = (e) => {
+		  chunks.push(e.data);
+		};
+	  })
+	  .catch((err) => {
+		console.error(`The following error occurred: ${err}`);
+	  });
+  }
+  
 // Set event listeners for the start, stop and openSettings buttons
 startBtn.addEventListener("click", startCapture, false);
 stopBtn.addEventListener("click", stopCapture, false);
