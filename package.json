@@ -3,6 +3,11 @@
   "version": "1.0.0",
   "description": "A screen recorder",
   "main": "main.js",
+  "permissions": [
+    {
+      "desktopCapture": true
+    }
+  ],
   "scripts": {
     "test": "npm test",
     "start": "electron ."
@@ -16,6 +21,9 @@
     "electron": "^27.0.2"
   },
   "dependencies": {
+    "electron": "^25.0.0",
+    "electron-util": "^0.17.2",
     "iconify": "^1.4.0"
+    
   }
 }
