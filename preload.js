@@ -8,7 +8,7 @@
 
 const { contextBridge, ipcRenderer } = require('electron');
 
-contextBridge.exposeInMainWorld('electronApi', {
+contextBridge.exposeInMainWorld('Electron', {
 	main: {
 		isOSX: () => process.platform === 'darwin',
 		isWindows: () => process.platform === 'win32',
