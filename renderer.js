@@ -9,7 +9,7 @@
 //  the Main process for ScreenAccess permission, then we request ScreenSources 
 // and display our modal Screen Picker with the available sources.
 
-const main = window.electronApi.main;
+const main = window.Electron.main;
 
 const video = document.querySelector('#stream');
 const startBtn = document.querySelector('#start');
