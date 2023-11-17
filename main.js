@@ -23,9 +23,12 @@ function createWindow() {
 
     // and load the index.html of the app.
     mainWindow.loadFile('index.html');
+    mainWindow.on('closed', function () {
+        mainWindow = null;
+    });
 
     // Open the DevTools.
-    // mainWindow.webContents.openDevTools()
+    mainWindow.webContents.openDevTools()
 }
 
 // This method will be called when Electron has finished
@@ -38,10 +41,6 @@ app.whenReady().then(() => {
         // On macOS it's common to re-create a window in the app when the
         // dock icon is clicked and there are no other windows open.
         if (BrowserWindow.getAllWindows().length === 0) createWindow();
-    });
-
-    mainWindow.on('closed', function () {
-        mainWindow = null;
     });
 });
 
@@ -58,7 +57,7 @@ app.on('window-all-closed', function () {
 ipcMain.handle('electronMain:openScreenSecurity', () => util.openSystemPreferences('security', 'Privacy_ScreenCapture'));
 ipcMain.handle('electronMain:getScreenAccess', () => !IS_OSX || systemPreferences.getMediaAccessStatus('screen') === 'granted');
 ipcMain.handle('electronMain:screen:getSources', () => {
-    return desktopCapturer.getSources({types: ['window', 'screen']}).then(async sources => {
+    return desktopCapturer.getSources({types: ['window', 'screen','tab','desktop']}).then(async sources => {
         return sources.map(source => {
             source.thumbnailURL = source.thumbnail.toDataURL();
             return source;

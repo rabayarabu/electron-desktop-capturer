@@ -70,58 +70,70 @@ async function getDisplayMedia() {
 	if (!has_access) {
 		return reject('none');
 	}
+	console.log('has_access', has_access);
 
 	try {
 		const sources = await main.getScreenSources();
 		screenPickerShow(sources, async (id) => {
-			try {
-				const source = sources.find(source => source.id === id);
-				if (!source) {
-					return reject('none');
-				}
-
-				const stream = await window.navigator.mediaDevices.getUserMedia({
-					audio: true,
-					video: {
-						mandatory: {
-							chromeMediaSource: 'desktop',
-							chromeMediaSourceId: source.id
-						}
-					}
-				});
-
-				if (stream) {
-					console.log("getUserMedia supported.", stream);
-					mediaRecorder = new MediaRecorder(stream);
-					mediaRecorder.onstart = () => {
-						console.log("recorder started");
-						startBtn.style.background = "red";
-						startBtn.style.color = "black";
-					}
-					mediaRecorder.ondataavailable = (e) => {
-						const { data } = e;
-						if (data.size > 0) {
-							recordedCunks.push(e.data);
-						}
-					};
-					mediaRecorder.onstop = (e) => {
-						if (recordedCunks.length > 0) {
-							const videoUrl = URL.createObjectURL(new Blob(recordedCunks, { type: 'video/mp4' }));
-							downloadFile(videoUrl, 'recording');
-						}
-
-						console.log("data available after MediaRecorder.stop() called.");
-
-					};
-					mediaRecorder.start();
-				}
+			const source = sources.find(source => source.id === id);
+			if (!source) {
+				return reject('none');
 			}
-			catch (err) {
-				reject(err);
+			console.log('selected source', source);
+			const devices = await window.navigator.mediaDevices.enumerateDevices();
+			devices.forEach((device) => {
+				console.log(`${device.kind}: ${device.label} id = ${device.deviceId}`);
+			});
+			const audioInputStream = await window.navigator.mediaDevices.getUserMedia({ audio: true });
+			const stream = await window.navigator.mediaDevices.getUserMedia({
+				audio: {
+					mandatory: {
+						chromeMediaSource: 'desktop',
+					}
+				},
+				video: {
+					mandatory: {
+						chromeMediaSource: 'desktop',
+						chromeMediaSourceId: source.id
+					}
+				}
+			});
+			console.log('stream', stream);
+
+			const combinedStream = new MediaStream();
+			combinedStream.addTrack(audioInputStream.getAudioTracks()[0]);
+			combinedStream.addTrack(stream.getVideoTracks()[0]);
+			combinedStream.addTrack(stream.getAudioTracks()[0]);
+
+			if (combinedStream) {
+				console.log("getUserMedia supported.", combinedStream);
+				mediaRecorder = new MediaRecorder(combinedStream);
+				mediaRecorder.onstart = () => {
+					console.log("recorder started");
+					startBtn.style.background = "red";
+					startBtn.style.color = "black";
+				}
+				mediaRecorder.ondataavailable = (e) => {
+					const { data } = e;
+					if (data.size > 0) {
+						recordedCunks.push(e.data);
+					}
+				};
+				mediaRecorder.onstop = (e) => {
+					if (recordedCunks.length > 0) {
+						const videoUrl = URL.createObjectURL(new Blob(recordedCunks, { type: 'video/mp4' }));
+						downloadFile(videoUrl, 'recording');
+					}
+
+					console.log("data available after MediaRecorder.stop() called.");
+
+				};
+				mediaRecorder.start();
 			}
-		}, {});
+		});
 	}
 	catch (err) {
+		console.log('err', err);
 		reject(err);
 	}
 }
@@ -156,10 +168,10 @@ function screenPickerShow(sources, onselect) {
 		wrapper.append(thumbnail);
 		wrapper.append(label);
 		item.append(wrapper);
-		item.onclick = () => {
-			onselect(source.id);
+		item.onclick = async () => {
+			await onselect(source.id);
 			MicroModal.close('electron-screen-picker');
-		};
+		}
 		list.append(item);
 	});
 
